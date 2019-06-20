@@ -1,0 +1,39 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.weisen.www.code.yjf.login",
+      "nativeLanguage": "zh-cn"
+    },
+    "jhipsterVersion": "6.0.1",
+    "applicationType": "uaa",
+    "baseName": "login",
+    "packageName": "com.weisen.www.code.yjf.login",
+    "packageFolder": "com/weisen/www/code/yjf/login",
+    "serverPort": "9999",
+    "authenticationType": "uaa",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MjM5YWVlY2I0YzI5NTE4NDkwY2M2NjcyOGY1MzM3ZWE4NGQ0ZGUyNzMzNTE4NTc5Mzg5ZDBhNGZiNDc1OTllYTJlYjE1MGQyMWQwY2JhNjZlM2Q4OWYxODIxNjBlYzg0MjQwZWFlYzg4NmQ0NDBlYmYyMzgyZWFiOWFhMDIwNDE=",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "zh-cn",
+    "languages": [
+      "zh-cn"
+    ],
+    "skipClient": true
+  }
+}

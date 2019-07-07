@@ -1,29 +1,31 @@
 package com.weisen.www.code.yjf.login.web.rest;
 
 
-import com.weisen.www.code.yjf.login.domain.User;
-import com.weisen.www.code.yjf.login.repository.UserRepository;
-import com.weisen.www.code.yjf.login.security.SecurityUtils;
-import com.weisen.www.code.yjf.login.service.MailService;
-import com.weisen.www.code.yjf.login.service.Rewrite_UserService;
-import com.weisen.www.code.yjf.login.service.dto.PasswordChangeDTO;
-import com.weisen.www.code.yjf.login.service.dto.UserDTO;
-import com.weisen.www.code.yjf.login.web.rest.errors.*;
-import com.weisen.www.code.yjf.login.web.rest.vm.KeyAndPasswordVM;
-import com.weisen.www.code.yjf.login.web.rest.vm.ManagedUserVM;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.*;
+import com.weisen.www.code.yjf.login.repository.UserRepository;
+import com.weisen.www.code.yjf.login.service.MailService;
+import com.weisen.www.code.yjf.login.service.Rewrite_UserService;
+import com.weisen.www.code.yjf.login.service.dto.PasswordChangeDTO;
+import com.weisen.www.code.yjf.login.web.rest.errors.EmailAlreadyUsedException;
+import com.weisen.www.code.yjf.login.web.rest.errors.InvalidPasswordException;
+import com.weisen.www.code.yjf.login.web.rest.errors.LoginAlreadyUsedException;
+import com.weisen.www.code.yjf.login.web.rest.vm.ManagedUserVM;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * REST controller for managing the current user's account.
@@ -41,17 +43,10 @@ public class Rewrite_AccountResource {
 
     private final Logger log = LoggerFactory.getLogger(Rewrite_AccountResource.class);
 
-    private final UserRepository userRepository;
-
     private final Rewrite_UserService rewrite_UserService;
 
-    private final MailService mailService;
-
-    public Rewrite_AccountResource(UserRepository userRepository, Rewrite_UserService rewrite_UserService, MailService mailService) {
-
-        this.userRepository = userRepository;
+    public Rewrite_AccountResource(Rewrite_UserService rewrite_UserService) {
         this.rewrite_UserService = rewrite_UserService;
-        this.mailService = mailService;
     }
 
     /**
@@ -62,20 +57,17 @@ public class Rewrite_AccountResource {
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
-    @GetMapping("/registerOverride")
+    @GetMapping("/public/random-user")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("生成一个随机用户,并返回用户ID")
     public String registerAccount(HttpServletRequest request) {
         return rewrite_UserService.registerUser();
     }
     
-    @PostMapping("/registerOverride")
+    @PostMapping("/public/phone-user")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("根据手机号生成一个用户,并返回用户ID")
     public String registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (!checkPasswordLength(managedUserVM.getPassword())) {
-            throw new InvalidPasswordException();
-        }
         return rewrite_UserService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 

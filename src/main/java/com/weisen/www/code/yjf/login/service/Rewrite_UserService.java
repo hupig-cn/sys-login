@@ -89,7 +89,7 @@ public class Rewrite_UserService {
 		// new user gets initially a generated password
 		newUser.setPassword(encryptedPassword);
 		newUser.setFirstName(userDTO.getLogin());
-		newUser.setEmail(RandomStringUtils.randomNumeric(6) + "@local");
+		newUser.setEmail(RandomStringUtils.randomAlphanumeric(20) + "@local");
 		newUser.setActivated(true);
 		Set<Authority> authorities = new HashSet<>();
 		authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);

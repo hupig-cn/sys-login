@@ -16,7 +16,7 @@ import com.aliyuncs.profile.DefaultProfile;
 
 public final class SendCode {
 
-	private static final String SIGNNAME = "园积分";
+	private static final String SIGNNAME = "圆积分";
 
 	private static final String AccessKey_ID = "LTAIO0A18h5ZjM6h";
 

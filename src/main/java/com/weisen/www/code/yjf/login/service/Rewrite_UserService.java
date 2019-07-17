@@ -3,6 +3,7 @@ package com.weisen.www.code.yjf.login.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -122,6 +123,22 @@ public class Rewrite_UserService {
 		});
 	}
 
+	/**
+     * Update all information for a specific user, and return the modified user.
+     *
+     * @param userDTO user to update.
+     * @return updated user.
+     */
+    public String updateUser(UserDTO userDTO) {
+    	User user = userRepository.findById(userDTO.getId()).get();
+    	this.clearUserCaches(user);
+    	user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl():userDTO.getImageUrl());
+    	user.setFirstName(userDTO.getFirstName() == null? user.getFirstName():userDTO.getFirstName());
+    	user = userRepository.save(user);
+    	this.clearUserCaches(user);
+    	return user.getId() == userDTO.getId() ? "修改成功":"修改失败，请稍后再试";
+    }
+    
 	/**
 	 * Gets a list of all the authorities.
 	 * 

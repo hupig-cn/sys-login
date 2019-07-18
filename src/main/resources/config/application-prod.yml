@@ -136,9 +136,9 @@ jhipster:
     authentication:
       jwt:
         # Access Token is valid for 5 mins
-        token-validity-in-seconds: 300
+        token-validity-in-seconds: -1
         # Refresh Token is valid for 7 days
-        token-validity-in-seconds-for-remember-me: 252000
+        token-validity-in-seconds-for-remember-me: -1
   mail: # specific JHipster mail property, for standard properties see MailProperties
     from: login@localhost
     base-url: http://my-server-url-to-change # Modify according to your server's URL
@@ -162,9 +162,9 @@ uaa:
     alias: selfsigned
   web-client-configuration:
     # Access Token is valid for 5 mins
-    access-token-validity-in-seconds: 300
+    access-token-validity-in-seconds: -1
     # Refresh Token is valid for 7 days
-    refresh-token-validity-in-seconds-for-remember-me: 604800
+    refresh-token-validity-in-seconds-for-remember-me: -1
     #change client secret in production, keep in sync with gateway configuration
     client-id: web_app
     secret: changeit

@@ -141,9 +141,9 @@ uaa:
     alias: selfsigned
   web-client-configuration:
     # Access Token is valid for 5 mins
-    access-token-validity-in-seconds: -1
+    access-token-validity-in-seconds: 2592000
     # Refresh Token is valid for 7 days
-    refresh-token-validity-in-seconds-for-remember-me: -1
+    refresh-token-validity-in-seconds-for-remember-me: 2592000
     client-id: web_app
     secret: changeit
 # ===================================================================

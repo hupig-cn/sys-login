@@ -122,13 +122,17 @@ public class Rewrite_UserService {
 			log.debug("Changed password for User: {}", user);
 		});
 	}
+	
+	public String delUsers(String userid) {
+		User user = userRepository.findById(Long.parseLong(userid)).get();
+		if (user!=null&&user.getLogin().length()!=11) {
+			userRepository.delete(user);
+			return "成功";
+		}else {
+			return "操作失败";
+		}
+	}
 
-	/**
-     * Update all information for a specific user, and return the modified user.
-     *
-     * @param userDTO user to update.
-     * @return updated user.
-     */
     public String updateUser(UserDTO userDTO) {
     	User user = userRepository.findById(userDTO.getId()).get();
     	this.clearUserCaches(user);

@@ -14,4 +14,6 @@ public interface Rewrite_SmsServiceRepository extends JpaRepository<SmsService, 
 	
 	SmsService findOneByPhone(String phone);
 	
+	SmsService findOneByPhoneAndType(String phone,String type);
+	
 }

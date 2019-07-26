@@ -120,6 +120,7 @@ public class Rewrite_SmsServiceService {
 	
 	public String validateCode(String login, String vertifyCode, String type) {
 		SmsService mSmsData = rewrite_SmsServiceRepository.findOneByPhoneAndType(login, type);
+		System.out.println(login+type);
 		log.debug(new Gson().toJson(mSmsData));
 		if (mSmsData == null) {
 			return "非法调用";

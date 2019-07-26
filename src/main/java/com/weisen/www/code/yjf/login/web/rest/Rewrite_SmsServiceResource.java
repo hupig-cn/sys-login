@@ -70,7 +70,7 @@ public class Rewrite_SmsServiceResource {
     
     @ApiOperation("验证支付密码短信验证码")
     @Timed
-    @PostMapping("/validate-code")
+    @PostMapping("/public/validate-code")
     public String validateCode (@RequestBody Rewrite_200_PayPasswordCodeDTO payPasswordCodeDTO) {
         log.debug("验证支付密码短信验证码,{}", payPasswordCodeDTO);
         String code = "";

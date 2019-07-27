@@ -2,19 +2,19 @@ package com.weisen.www.code.yjf.login.service.dto;
 
 public class Rewrite_200_PayPasswordCodeDTO {
 	
-	private String login;
+	private String phone;
 
     private String vertifyCode;
-    
-    public String getLogin() {
-		return login;
-	}
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public String getVertifyCode() {
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getVertifyCode() {
         return vertifyCode;
     }
 

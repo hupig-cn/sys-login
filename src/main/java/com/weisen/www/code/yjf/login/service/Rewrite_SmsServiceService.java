@@ -83,11 +83,11 @@ public class Rewrite_SmsServiceService {
 	
 	public String sendPayPasswordCode(String phone) {
 		log.debug("Request to save SmsService : {}", phone);
-		if (userRepository.findOneByLogin(phone).isPresent())
-			return "此用户已存在。";
+//		if (userRepository.findOneByLogin(phone).isPresent())
+//			return "此用户已存在。";
 		SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
 		smsServiceDTO.setSendtime(System.currentTimeMillis());
-		SmsService smsService = rewrite_SmsServiceRepository.findOneByPhone(phone);
+		SmsService smsService = rewrite_SmsServiceRepository.findOneByPhoneAndType(phone,"修改密码");
 		if (null != smsService) {
 			if ((smsServiceDTO.getSendtime() - smsService.getSendtime()) / 1000 / (60 * 60 * 24) > 0) {
 				smsServiceDTO.setNumber(0);
@@ -119,6 +119,9 @@ public class Rewrite_SmsServiceService {
 	}
 	
 	public String validateCode(String login, String vertifyCode, String type) {
+        System.out.println(login);
+        System.out.println(vertifyCode);
+        System.out.println(type);
 		SmsService mSmsData = rewrite_SmsServiceRepository.findOneByPhoneAndType(login, type);
 		System.out.println(login+type);
 		log.debug(new Gson().toJson(mSmsData));

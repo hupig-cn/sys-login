@@ -104,7 +104,7 @@ public class Rewrite_AccountResource {
         rewrite_UserService.completePasswordReset(password);
     }
     
-    @PostMapping(path = "/accountOverride/reset-password/finish")
+    @PostMapping(path = "/accountOverride/reset-password/finish/admin")
     @ApiOperation("直接修改密码admin")
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public void finishPasswordReset(@RequestBody String id,  String password) {

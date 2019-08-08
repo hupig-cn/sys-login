@@ -123,6 +123,14 @@ public class Rewrite_UserService {
 		});
 	}
 	
+	public void completePasswordResetAdmin(String id, String password) {
+		User user = userRepository.findById(Long.parseLong(id)).get();
+		String encryptedPassword = passwordEncoder.encode(password);
+		user.setPassword(encryptedPassword);
+		this.clearUserCaches(user);
+		log.debug("Changed password for User: {}", user);
+	}
+	
 	public String delUsers(String userid) {
 		User user = userRepository.findById(Long.parseLong(userid)).get();
 		if (user!=null&&user.getLogin().length()!=11) {

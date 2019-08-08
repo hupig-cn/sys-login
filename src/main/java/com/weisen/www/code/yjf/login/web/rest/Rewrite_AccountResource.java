@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.weisen.www.code.yjf.login.repository.UserRepository;
+import com.weisen.www.code.yjf.login.security.AuthoritiesConstants;
 import com.weisen.www.code.yjf.login.service.MailService;
 import com.weisen.www.code.yjf.login.service.Rewrite_UserService;
 import com.weisen.www.code.yjf.login.service.dto.PasswordChangeDTO;
@@ -100,6 +102,16 @@ public class Rewrite_AccountResource {
             throw new InvalidPasswordException();
         }
         rewrite_UserService.completePasswordReset(password);
+    }
+    
+    @PostMapping(path = "/accountOverride/reset-password/finish")
+    @ApiOperation("直接修改密码admin")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public void finishPasswordReset(@RequestBody String id,  String password) {
+        if (!checkPasswordLength(password)) {
+            throw new InvalidPasswordException();
+        }
+        rewrite_UserService.completePasswordResetAdmin(id, password);
     }
 
     private static boolean checkPasswordLength(String password) {

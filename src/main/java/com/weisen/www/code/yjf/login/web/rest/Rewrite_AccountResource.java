@@ -21,6 +21,7 @@ import com.weisen.www.code.yjf.login.security.AuthoritiesConstants;
 import com.weisen.www.code.yjf.login.service.MailService;
 import com.weisen.www.code.yjf.login.service.Rewrite_UserService;
 import com.weisen.www.code.yjf.login.service.dto.PasswordChangeDTO;
+import com.weisen.www.code.yjf.login.service.dto.Rewrite_200_ChangeUserPasswordDTO;
 import com.weisen.www.code.yjf.login.web.rest.errors.EmailAlreadyUsedException;
 import com.weisen.www.code.yjf.login.web.rest.errors.InvalidPasswordException;
 import com.weisen.www.code.yjf.login.web.rest.errors.LoginAlreadyUsedException;
@@ -107,11 +108,11 @@ public class Rewrite_AccountResource {
     @PostMapping(path = "/accountOverride/reset-password/finish/admin")
     @ApiOperation("直接修改密码admin")
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public void finishPasswordReset(@RequestBody String id,  String password) {
-        if (!checkPasswordLength(password)) {
+    public void finishPasswordReset(@RequestBody Rewrite_200_ChangeUserPasswordDTO rewrite_200_ChangeUserPasswordDTO) {
+        if (!checkPasswordLength(rewrite_200_ChangeUserPasswordDTO.getPassword())) {
             throw new InvalidPasswordException();
         }
-        rewrite_UserService.completePasswordResetAdmin(id, password);
+        rewrite_UserService.completePasswordResetAdmin(rewrite_200_ChangeUserPasswordDTO.getId(), rewrite_200_ChangeUserPasswordDTO.getPassword());
     }
 
     private static boolean checkPasswordLength(String password) {

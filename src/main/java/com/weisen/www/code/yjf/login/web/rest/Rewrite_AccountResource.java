@@ -4,6 +4,8 @@ package com.weisen.www.code.yjf.login.web.rest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.weisen.www.code.yjf.login.service.dto.Rewrite_submitResetPasswrodDTO;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,8 @@ import com.weisen.www.code.yjf.login.web.rest.vm.ManagedUserVM;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import java.util.Optional;
 
 /**
  * REST controller for managing the current user's account.
@@ -66,7 +70,7 @@ public class Rewrite_AccountResource {
     public String registerAccount(HttpServletRequest request) {
         return rewrite_UserService.registerUser();
     }
-    
+
     @PostMapping("/public/phone-user")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation("根据手机号生成一个用户,并返回用户ID")
@@ -82,11 +86,11 @@ public class Rewrite_AccountResource {
      */
     @PostMapping(path = "/accountOverride/change-password")
     @ApiOperation("使用旧密码修改密码")
-    public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
+    public String changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
         if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
-        rewrite_UserService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
+        return rewrite_UserService.rewrite_changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
     }
 
     /**
@@ -104,7 +108,7 @@ public class Rewrite_AccountResource {
         }
         rewrite_UserService.completePasswordReset(password);
     }
-    
+
     @PostMapping(path = "/accountOverride/reset-password/finish/admin")
     @ApiOperation("直接修改密码admin")
     @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -113,6 +117,11 @@ public class Rewrite_AccountResource {
             throw new InvalidPasswordException();
         }
         rewrite_UserService.completePasswordResetAdmin(rewrite_200_ChangeUserPasswordDTO.getId(), rewrite_200_ChangeUserPasswordDTO.getPassword());
+    }
+    @PostMapping("/public/reset-password/code-phone")
+    @ApiOperation("根据验证码和电话号码修改密码")
+    public String resetPasswordByCodeAndPhone(@RequestBody Rewrite_submitResetPasswrodDTO rewrite_submitResetPasswrodDTO){
+        return rewrite_UserService.changePasswordByCodeAndPhone(rewrite_submitResetPasswrodDTO);
     }
 
     private static boolean checkPasswordLength(String password) {

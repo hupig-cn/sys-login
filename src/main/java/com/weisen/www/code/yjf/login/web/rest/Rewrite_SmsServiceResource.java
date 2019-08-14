@@ -51,7 +51,7 @@ public class Rewrite_SmsServiceResource {
         log.debug("REST request to save SmsService : {}", smsServiceDTO);
         return rewrite_SmsServiceService.save(smsServiceDTO.getPhone());
     }
-    
+
     /**
      * {@code POST  /sms-services} : 发送支付密码短信验证码.
      *
@@ -65,7 +65,13 @@ public class Rewrite_SmsServiceResource {
         log.debug("REST request to save SmsService : {}", smsServiceDTO);
         return rewrite_SmsServiceService.sendPayPasswordCode(smsServiceDTO.getPhone());
     }
-    
+    @PostMapping("/public/send-password-code")
+    @ApiOperation("发送登录密码的短信验证码")
+    public String sendPasswordCode(@RequestBody SmsServiceDTO smsServiceDTO) {
+        log.debug("REST request to save SmsService : {}", smsServiceDTO);
+        return rewrite_SmsServiceService.sendPasswordCode(smsServiceDTO.getPhone());
+    }
+
     @ApiOperation("验证支付密码短信验证码")
     @Timed
     @PostMapping("/public/validate-code")

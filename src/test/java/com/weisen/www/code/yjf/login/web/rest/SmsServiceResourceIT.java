@@ -1,13 +1,19 @@
 package com.weisen.www.code.yjf.login.web.rest;
 
-import com.weisen.www.code.yjf.login.LoginApp;
-import com.weisen.www.code.yjf.login.config.SecurityBeanOverrideConfiguration;
-import com.weisen.www.code.yjf.login.domain.SmsService;
-import com.weisen.www.code.yjf.login.repository.SmsServiceRepository;
-import com.weisen.www.code.yjf.login.service.SmsServiceService;
-import com.weisen.www.code.yjf.login.service.dto.SmsServiceDTO;
-import com.weisen.www.code.yjf.login.service.mapper.SmsServiceMapper;
-import com.weisen.www.code.yjf.login.web.rest.errors.ExceptionTranslator;
+import static com.weisen.www.code.yjf.login.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,14 +28,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.weisen.www.code.yjf.login.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.weisen.www.code.yjf.login.LoginApp;
+import com.weisen.www.code.yjf.login.domain.SmsService;
+import com.weisen.www.code.yjf.login.repository.SmsServiceRepository;
+import com.weisen.www.code.yjf.login.service.SmsServiceService;
+import com.weisen.www.code.yjf.login.service.dto.SmsServiceDTO;
+import com.weisen.www.code.yjf.login.service.mapper.SmsServiceMapper;
+import com.weisen.www.code.yjf.login.web.rest.errors.ExceptionTranslator;
 
 /**
  * Integration tests for the {@Link SmsServiceResource} REST controller.

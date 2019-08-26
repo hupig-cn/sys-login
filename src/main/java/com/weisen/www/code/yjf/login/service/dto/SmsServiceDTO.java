@@ -5,6 +5,7 @@ import java.util.Objects;
 /**
  * A DTO for the {@link com.weisen.www.code.yjf.login.domain.SmsService} entity.
  */
+@SuppressWarnings("serial")
 public class SmsServiceDTO implements Serializable {
 
     private Long id;

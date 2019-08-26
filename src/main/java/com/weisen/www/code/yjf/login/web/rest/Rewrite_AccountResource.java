@@ -1,14 +1,9 @@
 package com.weisen.www.code.yjf.login.web.rest;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import com.weisen.www.code.yjf.login.service.dto.Rewrite_submitResetPasswrodDTO;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.weisen.www.code.yjf.login.repository.UserRepository;
 import com.weisen.www.code.yjf.login.security.AuthoritiesConstants;
-import com.weisen.www.code.yjf.login.service.MailService;
 import com.weisen.www.code.yjf.login.service.Rewrite_UserService;
 import com.weisen.www.code.yjf.login.service.dto.PasswordChangeDTO;
 import com.weisen.www.code.yjf.login.service.dto.Rewrite_200_ChangeUserPasswordDTO;
+import com.weisen.www.code.yjf.login.service.dto.Rewrite_submitResetPasswrodDTO;
 import com.weisen.www.code.yjf.login.web.rest.errors.EmailAlreadyUsedException;
 import com.weisen.www.code.yjf.login.web.rest.errors.InvalidPasswordException;
 import com.weisen.www.code.yjf.login.web.rest.errors.LoginAlreadyUsedException;
@@ -32,8 +26,6 @@ import com.weisen.www.code.yjf.login.web.rest.vm.ManagedUserVM;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import java.util.Optional;
-
 /**
  * REST controller for managing the current user's account.
  */
@@ -41,14 +33,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(tags = "000-用户操作")
 public class Rewrite_AccountResource {
-
-    private static class AccountResourceException extends RuntimeException {
-        private AccountResourceException(String message) {
-            super(message);
-        }
-    }
-
-    private final Logger log = LoggerFactory.getLogger(Rewrite_AccountResource.class);
 
     private final Rewrite_UserService rewrite_UserService;
 

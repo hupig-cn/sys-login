@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data  repository for the SmsService entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface SmsServiceRepository extends JpaRepository<SmsService, Long> {
 

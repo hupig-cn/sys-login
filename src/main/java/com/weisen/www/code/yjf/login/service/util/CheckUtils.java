@@ -115,7 +115,7 @@ public class CheckUtils {
      * @param list
      * @return
      */
-    public static Boolean checkList(List list){
+    public static Boolean checkList(List<?> list){
         if(null == list ||0 == list.size() || list.contains(null))
             return false;
         return true;

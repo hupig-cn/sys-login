@@ -9,7 +9,6 @@ import com.weisen.www.code.yjf.login.domain.SmsService;
 /**
  * Spring Data  repository for the SmsService entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface Rewrite_SmsServiceRepository extends JpaRepository<SmsService, Long> {
 	

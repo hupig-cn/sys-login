@@ -5,6 +5,8 @@ import com.weisen.www.code.yjf.login.config.Constants;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CheckUtils {
     /**
@@ -13,7 +15,9 @@ public class CheckUtils {
      * @return
      */
     public static Boolean checkPhoneNumber(String phone){
-        if(null != phone.trim() && phone.trim().length() == 11 && phone.trim().matches(Constants.REGEX_MOBILE)){
+        Pattern r = Pattern.compile(Constants.REGEX_MOBILE);
+        Matcher m = r.matcher(phone.trim());
+        if(null != phone.trim() && phone.trim().length() == 11 && m.matches()){
             return true;
         }else {
             return false;

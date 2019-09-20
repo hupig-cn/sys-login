@@ -86,7 +86,7 @@ public class Rewrite_SmsServiceResource {
         } else if (!Pattern.matches("\\d{6}", code)) {
             return "短信验证码格式不正确";
         }
-        return rewrite_SmsServiceService.validateCode(payPasswordCodeDTO.getPhone(),payPasswordCodeDTO.getVertifyCode(),"修改密码");
+        return rewrite_SmsServiceService.validateCode(payPasswordCodeDTO.getPhone(),payPasswordCodeDTO.getVertifyCode(),"修改支付密码");
     }
 
 }

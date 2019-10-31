@@ -172,14 +172,11 @@ public class Rewrite_UserService {
     public String updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).get();
         this.clearUserCaches(user);
-        if(SensitiveWord.check(userDTO.getFirstName())) {
+        user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
+        user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
+        if(null != userDTO.getFirstName() && SensitiveWord.check(userDTO.getFirstName())) {
         	return "昵称包含敏感词，请重新修改";
         }
-        user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
-        if (SensitiveWord.check(userDTO.getFirstName())){
-            return "修改失败";
-        }
-        user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
         user = userRepository.save(user);
         this.clearUserCaches(user);
         return user.getId() == userDTO.getId() ? "修改成功" : "修改失败，请稍后再试";

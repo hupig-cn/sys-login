@@ -175,7 +175,7 @@ public class Rewrite_UserService {
         user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
         if(null != userDTO.getFirstName()) {
-        	if (SensitiveWord.check(userDTO.getFirstName())) {
+        	if (!SensitiveWord.check(userDTO.getFirstName())) {
         		return "昵称包含敏感词，请重新修改";
         	}
         }

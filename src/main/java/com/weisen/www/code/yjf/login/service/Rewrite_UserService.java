@@ -174,8 +174,10 @@ public class Rewrite_UserService {
         this.clearUserCaches(user);
         user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
-        if(null != userDTO.getFirstName() && SensitiveWord.check(userDTO.getFirstName())) {
-        	return "昵称包含敏感词，请重新修改";
+        if(null != userDTO.getFirstName()) {
+        	if (SensitiveWord.check(userDTO.getFirstName())) {
+        		return "昵称包含敏感词，请重新修改";
+        	}
         }
         user = userRepository.save(user);
         this.clearUserCaches(user);

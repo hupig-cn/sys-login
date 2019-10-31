@@ -11,6 +11,7 @@ import com.weisen.www.code.yjf.login.security.SecurityUtils;
 import com.weisen.www.code.yjf.login.service.dto.Rewrite_submitResetPasswrodDTO;
 import com.weisen.www.code.yjf.login.service.dto.UserDTO;
 import com.weisen.www.code.yjf.login.service.util.CheckUtils;
+import com.weisen.www.code.yjf.login.web.rest.SensitiveWord;
 import com.weisen.www.code.yjf.login.web.rest.errors.InvalidPasswordException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -167,6 +168,9 @@ public class Rewrite_UserService {
         User user = userRepository.findById(userDTO.getId()).get();
         this.clearUserCaches(user);
         user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
+        if (SensitiveWord.check(userDTO.getFirstName())){
+            return "修改失败";
+        }
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
         user = userRepository.save(user);
         this.clearUserCaches(user);

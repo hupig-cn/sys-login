@@ -176,6 +176,9 @@ public class Rewrite_UserService {
         	return "昵称包含敏感词，请重新修改";
         }
         user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
+        if (SensitiveWord.check(userDTO.getFirstName())){
+            return "修改失败";
+        }
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
         user = userRepository.save(user);
         this.clearUserCaches(user);

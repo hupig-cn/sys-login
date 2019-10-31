@@ -1,5 +1,20 @@
 package com.weisen.www.code.yjf.login.service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.weisen.www.code.yjf.login.domain.Authority;
 import com.weisen.www.code.yjf.login.domain.SmsService;
 import com.weisen.www.code.yjf.login.domain.User;
@@ -11,17 +26,8 @@ import com.weisen.www.code.yjf.login.security.SecurityUtils;
 import com.weisen.www.code.yjf.login.service.dto.Rewrite_submitResetPasswrodDTO;
 import com.weisen.www.code.yjf.login.service.dto.UserDTO;
 import com.weisen.www.code.yjf.login.service.util.CheckUtils;
+import com.weisen.www.code.yjf.login.web.rest.SensitiveWord;
 import com.weisen.www.code.yjf.login.web.rest.errors.InvalidPasswordException;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service class for managing users.
@@ -166,6 +172,9 @@ public class Rewrite_UserService {
     public String updateUser(UserDTO userDTO) {
         User user = userRepository.findById(userDTO.getId()).get();
         this.clearUserCaches(user);
+        if(SensitiveWord.check(userDTO.getFirstName())) {
+        	return "昵称包含敏感词，请重新修改";
+        }
         user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
         user = userRepository.save(user);

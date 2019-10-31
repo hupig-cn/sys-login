@@ -170,15 +170,15 @@ public class Rewrite_UserService {
     }
 
     public String updateUser(UserDTO userDTO) {
+    	if(null != userDTO.getFirstName()) {
+    		if (!SensitiveWord.check(userDTO.getFirstName())) {
+    			return "昵称包含敏感词，请重新修改";
+    		}
+    	}
         User user = userRepository.findById(userDTO.getId()).get();
         this.clearUserCaches(user);
         user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
-        if(null != userDTO.getFirstName()) {
-        	if (!SensitiveWord.check(userDTO.getFirstName())) {
-        		return "昵称包含敏感词，请重新修改";
-        	}
-        }
         user = userRepository.save(user);
         this.clearUserCaches(user);
         return user.getId() == userDTO.getId() ? "修改成功" : "修改失败，请稍后再试";

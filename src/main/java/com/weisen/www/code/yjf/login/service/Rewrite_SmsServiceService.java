@@ -51,7 +51,7 @@ public class Rewrite_SmsServiceService {
             return "此用户已存在。";
         SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
         smsServiceDTO.setSendtime(System.currentTimeMillis());
-        SmsService smsService = rewrite_SmsServiceRepository.findOneByPhone(phone);
+        SmsService smsService = rewrite_SmsServiceRepository.findOneByPhoneAndType(phone, "用户注册");
         if (null != smsService) {
             if ((smsServiceDTO.getSendtime() - smsService.getSendtime()) / 1000 / (60 * 60 * 24) > 0) {
                 smsServiceDTO.setNumber(0);
@@ -85,8 +85,9 @@ public class Rewrite_SmsServiceService {
 
     public String sendPayPasswordCode(String phone) {
         log.debug("Request to save SmsService : {}", phone);
-//		if (userRepository.findOneByLogin(phone).isPresent())
-//			return "此用户已存在。";
+		if (!userRepository.findOneByLogin(phone).isPresent()) {
+			return "用户不存在，请先注册";
+		}
         SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
         smsServiceDTO.setSendtime(System.currentTimeMillis());
         SmsService smsService = rewrite_SmsServiceRepository.findOneByPhoneAndType(phone, "修改支付密码");
@@ -121,8 +122,9 @@ public class Rewrite_SmsServiceService {
     }
     public String sendPasswordCode(String phone) {
         log.debug("Request to save SmsService : {}", phone);
-//		if (userRepository.findOneByLogin(phone).isPresent())
-//			return "此用户已存在。";
+        if (!userRepository.findOneByLogin(phone).isPresent()) {
+			return "用户不存在，请先注册";
+		}
         SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
         smsServiceDTO.setSendtime(System.currentTimeMillis());
         SmsService smsService = rewrite_SmsServiceRepository.findOneByPhoneAndType(phone, "修改密码");

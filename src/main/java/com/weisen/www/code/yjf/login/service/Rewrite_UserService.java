@@ -78,7 +78,7 @@ public class Rewrite_UserService {
     }
 
     public String registerUser(UserDTO userDTO, String password) {
-        SmsService smsService = rewrite_SmsServiceRepository.findOneByPhone(userDTO.getLogin());
+        SmsService smsService = rewrite_SmsServiceRepository.findOneByPhoneAndType(userDTO.getLogin(),"用户注册");
         if (null == smsService)
             return "请先发送验证码";
         if ((System.currentTimeMillis() - smsService.getSendtime()) / 1000 > DEF_OVERDUE)

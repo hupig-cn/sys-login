@@ -11,7 +11,7 @@ import com.weisen.www.code.yjf.login.service.util.Result;
 public interface Rewrite_ActivateAccountService {
 
 	// 查询账户状态
-	Result getAccountStatus(Long userId);
+	Result getAccountStatus(String userPhone);
 
 	// 注销账号
 	Result CancellationAccount(Long userId);

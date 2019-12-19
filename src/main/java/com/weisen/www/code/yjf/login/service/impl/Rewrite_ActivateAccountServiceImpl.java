@@ -26,8 +26,8 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	 * @date 2019-12-18 17:25:40
 	 */
 	@Override
-	public Result getAccountStatus(Long userId) {
-		User user = rewrite_UserRepository.findUserById(userId);
+	public Result getAccountStatus(String userPhone) {
+		User user = rewrite_UserRepository.finByLogin(userPhone);
 		if (user == null) {
 			return Result.fail("该用户不存在!请重新输入查找!");
 		}
@@ -53,12 +53,20 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		if (user == null) {
 			return Result.fail("该用户不存在!请重新输入查找!");
 		}
-		// 获取当前时间日期--nowDate
-		// 拿取用户最后注销时间
-		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
 		Instant now = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
 		long nowTime = now.toEpochMilli();
-
+		// 拿取用户注册账号时间
+		long createdDate = user.getCreatedDate().toEpochMilli();
+		// 拿取用户最后修改时间
+		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
+		if (createdDate == lastModifiedDate) {
+			// 修改账号状态
+			user.setActivated(false);
+			// 修改最后一次操作时间
+			user.setLastModifiedDate(now);
+			rewrite_UserRepository.saveAndFlush(user);
+			return Result.suc("注销成功!七天后才可激活此账号!");
+		}
 		if ((nowTime - lastModifiedDate) < 2592000000L) {
 			return Result.fail("不能频繁注销哦!");
 		}
@@ -70,7 +78,7 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 			// 修改最后一次操作时间
 			user.setLastModifiedDate(now);
 			rewrite_UserRepository.saveAndFlush(user);
-			return Result.suc("注销成功!");
+			return Result.suc("注销成功!七天后才可激活此账号!");
 		}
 	}
 
@@ -86,13 +94,23 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		if (user == null) {
 			return Result.fail("该用户不存在!请重新输入查找!");
 		}
+		// 获取当前时间日期--nowDate
+		// 拿取用户最后注销时间
+		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
+		Instant now = Instant.now();
+		long nowTime = now.toEpochMilli();
+		// 注销后七天才可激活
+		if ((nowTime - lastModifiedDate) < 604800000L) {
+			return Result.fail("还不能激活哦!");
+		}
 		if (user.getActivated() == true) {
 			return Result.fail("该账号已激活!不能重复激活哦!");
 		} else {
+			user.setId(user.getId());
 			user.setActivated(true);
+			user.getCreatedDate();
 			rewrite_UserRepository.saveAndFlush(user);
 			return Result.suc("该账号已成功激活!可以去登录啦!");
 		}
 	}
-
 }

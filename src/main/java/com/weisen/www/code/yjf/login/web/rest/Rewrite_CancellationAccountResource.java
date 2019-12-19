@@ -43,9 +43,9 @@ public class Rewrite_CancellationAccountResource {
 	 */
 	@PostMapping(value = "/get/Account/Status")
 	@ApiOperation(value = "查询账号状态")
-	public ResponseEntity<Result> getAccountStatus(@RequestParam(value = "userId") Long userId) {
-		Result result = rewrite_ActivateAccountService.getAccountStatus(userId);
-		logger.debug("访问成功:{},传入值:{},返回值:{}", "/get/Account/Status", userId, result);
+	public ResponseEntity<Result> getAccountStatus(@RequestParam(value = "userPhone") String userPhone) {
+		Result result = rewrite_ActivateAccountService.getAccountStatus(userPhone);
+		logger.debug("访问成功:{},传入值:{},返回值:{}", "/get/Account/Status", userPhone, result);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
 	}
 

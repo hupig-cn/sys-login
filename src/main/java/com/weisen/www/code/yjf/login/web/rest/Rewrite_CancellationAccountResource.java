@@ -16,7 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * 优惠活动接口
+ * 账号注销,账号激活,查询账号状态
  *
  * @author LuoJinShui
  * @date 2019-12-18 17:14:34
@@ -59,7 +59,7 @@ public class Rewrite_CancellationAccountResource {
 	@ApiOperation(value = "注销账号")
 	public ResponseEntity<Result> deleteCancellationAccount(@RequestParam(value = "userId") Long userId) {
 		Result result = rewrite_ActivateAccountService.CancellationAccount(userId);
-		logger.debug("访问成功:{},传入值:{},返回值:{}", "/delete/Cancellation/Account", userId, result);
+		logger.debug("访问成功:{},传入值:{},返回值:{}", "/Cancellation/Account", userId, result);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
 	}
 
@@ -73,7 +73,7 @@ public class Rewrite_CancellationAccountResource {
 	@ApiOperation(value = "激活账号")
 	public ResponseEntity<Result> getActivateAccount(@RequestParam(value = "userId") Long userId) {
 		Result result = rewrite_ActivateAccountService.getActivateAccount(userId);
-		logger.debug("访问成功:{},传入值:{},返回值:{}", "/get/Retrieve/Account", userId, result);
+		logger.debug("访问成功:{},传入值:{},返回值:{}", "/Activate/Account", userId, result);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
 	}
 

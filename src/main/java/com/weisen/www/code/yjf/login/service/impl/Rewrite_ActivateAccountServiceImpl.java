@@ -31,11 +31,13 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		if (user == null) {
 			return Result.fail("该用户不存在!请重新输入查找!");
 		}
+		// 状态为true正常,为false已注销
 		boolean status = user.getActivated();
 		if (user.getActivated() == false) {
-			return Result.fail("该账户已被注销!");
+			return Result.suc("查询成功!", user.getActivated());
+		} else {
+			return Result.suc("查询成功!", status);
 		}
-		return Result.suc("查询成功!", status);
 	}
 
 	/**

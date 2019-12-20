@@ -122,7 +122,6 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		if (user.getActivated() == true) {
 			return Result.fail("该账号已激活!不能重复激活哦!");
 		}
-		
 		SmsService mSmsData = rewrite_SmsServiceRepository.findOneByPhoneAndType(userPhone, "找回账号");
 		log.debug(new Gson().toJson(mSmsData));
 		if (mSmsData == null) {

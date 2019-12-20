@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 import com.weisen.www.code.yjf.login.domain.SmsService;
+import com.weisen.www.code.yjf.login.domain.User;
 import com.weisen.www.code.yjf.login.repository.Rewrite_SmsServiceRepository;
+import com.weisen.www.code.yjf.login.repository.Rewrite_UserRepository;
 import com.weisen.www.code.yjf.login.repository.UserRepository;
 import com.weisen.www.code.yjf.login.service.dto.SmsServiceDTO;
 import com.weisen.www.code.yjf.login.service.mapper.SmsServiceMapper;
@@ -38,11 +40,15 @@ public class Rewrite_SmsServiceService {
 	// 验证码过期时间
 	private static final int DEF_OVERDUE = 60 * 5;
 
+	private final Rewrite_UserRepository rewrite_UserRepository;
+
 	public Rewrite_SmsServiceService(Rewrite_SmsServiceRepository rewrite_SmsServiceRepository,
-			SmsServiceMapper smsServiceMapper, UserRepository userRepository) {
+			SmsServiceMapper smsServiceMapper, UserRepository userRepository,
+			Rewrite_UserRepository rewrite_UserRepository) {
 		this.rewrite_SmsServiceRepository = rewrite_SmsServiceRepository;
 		this.smsServiceMapper = smsServiceMapper;
 		this.userRepository = userRepository;
+		this.rewrite_UserRepository = rewrite_UserRepository;
 	}
 
 	public String save(String phone) {
@@ -168,8 +174,12 @@ public class Rewrite_SmsServiceService {
 	 */
 	public String retrieveAccountCode(String phone) {
 		log.debug("Request to save SmsService : {}", phone);
-		if (!userRepository.findOneByLogin(phone).isPresent()) {
+		User user = rewrite_UserRepository.finByLogin(phone);
+		if (user == null) {
 			return "用户不存在，请先注册";
+		}
+		if (user.getActivated() == true) {
+			return "该账号未注销!不能发送验证码!";
 		}
 		SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
 		smsServiceDTO.setSendtime(System.currentTimeMillis());

@@ -29,6 +29,12 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	// 验证码过期时间
 	private static final int DEF_OVERDUE = 60 * 5;
 
+	// 30天的时间戳
+	private static final long DAY_THIRTY_INSTANT = 2592000000L;
+
+	// 7天的时间戳
+	private static final long DAY_SEVEN_INSTANT = 604800000L;
+
 	public Rewrite_ActivateAccountServiceImpl(Rewrite_UserRepository rewrite_UserRepository,
 			Rewrite_SmsServiceRepository rewrite_SmsServiceRepository) {
 		this.rewrite_UserRepository = rewrite_UserRepository;
@@ -86,7 +92,7 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		if (user.getActivated() == false) {
 			return Result.fail("该账号已被注销!不能重复注销哦!");
 		}
-		if ((nowTime - lastModifiedDate) < 2592000000L) {
+		if ((nowTime - lastModifiedDate) < DAY_THIRTY_INSTANT) {
 			return Result.fail("30天内不能频繁注销哦!");
 		} else {
 			// 修改账号状态
@@ -116,7 +122,7 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		Instant now = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
 		long nowTime = now.toEpochMilli();
 		// 注销后七天才可激活
-		if ((nowTime - lastModifiedDate) < 604800000L) {
+		if ((nowTime - lastModifiedDate) < DAY_SEVEN_INSTANT) {
 			return Result.fail("还不能激活哦!");
 		}
 		if (user.getActivated() == true) {

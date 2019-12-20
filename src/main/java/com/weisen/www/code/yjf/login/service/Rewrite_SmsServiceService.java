@@ -2,16 +2,13 @@ package com.weisen.www.code.yjf.login.service;
 
 import com.weisen.www.code.yjf.login.service.util.CheckUtils;
 import com.weisen.www.code.yjf.login.service.util.Result;
-
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.google.gson.Gson;
 import com.weisen.www.code.yjf.login.domain.SmsService;
 import com.weisen.www.code.yjf.login.domain.User;
@@ -44,6 +41,9 @@ public class Rewrite_SmsServiceService {
 	private static final int DEF_INTERVAL = 60;
 	// 验证码过期时间
 	private static final int DEF_OVERDUE = 60 * 5;
+
+	// 7天的时间戳
+	private static final long DAY_SEVEN_INSTANT = 604800000L;
 
 	private final Rewrite_UserRepository rewrite_UserRepository;
 
@@ -190,7 +190,7 @@ public class Rewrite_SmsServiceService {
 		long nowTime = now.toEpochMilli();
 		// 拿取用户最后修改时间
 		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
-		if ((nowTime - lastModifiedDate) < 604800000L) {
+		if ((nowTime - lastModifiedDate) < DAY_SEVEN_INSTANT) {
 			return Result.fail("注销时间没有超过七天!不能发送验证码!");
 		}
 		SmsServiceDTO smsServiceDTO = new SmsServiceDTO();

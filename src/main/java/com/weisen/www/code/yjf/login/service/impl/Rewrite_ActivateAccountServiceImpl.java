@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	private final Rewrite_UserRepository rewrite_UserRepository;
 
 	private final Rewrite_SmsServiceRepository rewrite_SmsServiceRepository;
+	
+	private final PasswordEncoder passwordEncoder;
 
 	// 验证码过期时间
 	private static final int DEF_OVERDUE = 60 * 5;
@@ -36,9 +39,10 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	private static final long DAY_SEVEN_INSTANT = 604800000L;
 
 	public Rewrite_ActivateAccountServiceImpl(Rewrite_UserRepository rewrite_UserRepository,
-			Rewrite_SmsServiceRepository rewrite_SmsServiceRepository) {
+			Rewrite_SmsServiceRepository rewrite_SmsServiceRepository,PasswordEncoder passwordEncoder) {
 		this.rewrite_UserRepository = rewrite_UserRepository;
 		this.rewrite_SmsServiceRepository = rewrite_SmsServiceRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/**
@@ -137,8 +141,12 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		} else if (!mSmsData.getCode().equals(vertifyCode)) {
 			return Result.fail("验证码不正确!");
 		} else {
-			rewrite_UserRepository.saveUser(userPhone);
-			return Result.suc("该账号已成功激活!可以去登录啦!");
+			String encryptedPassword = passwordEncoder.encode("123456");
+			user.setPassword(encryptedPassword);
+			user.setActivated(true);
+			rewrite_UserRepository.save(user);
+//			rewrite_UserRepository.saveUser(userPhone);
+			return Result.suc("该账号已成功激活!可以去登录啦!默认密码为123456");
 		}
 	}
 }

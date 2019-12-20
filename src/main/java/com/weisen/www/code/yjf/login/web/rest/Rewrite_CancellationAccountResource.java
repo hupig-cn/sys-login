@@ -69,7 +69,7 @@ public class Rewrite_CancellationAccountResource {
 	 * @param userId
 	 * @return
 	 */
-	@PostMapping(value = "/Activate/Account")
+	@PostMapping(value = "/public/Activate/Account")
 	@ApiOperation(value = "激活账号")
 	public ResponseEntity<Result> getActivateAccount(@RequestParam(value = "userId") Long userId) {
 		Result result = rewrite_ActivateAccountService.getActivateAccount(userId);

@@ -2,9 +2,16 @@ package com.weisen.www.code.yjf.login.service.impl;
 
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.gson.Gson;
+import com.weisen.www.code.yjf.login.domain.SmsService;
 import com.weisen.www.code.yjf.login.domain.User;
+import com.weisen.www.code.yjf.login.repository.Rewrite_SmsServiceRepository;
 import com.weisen.www.code.yjf.login.repository.Rewrite_UserRepository;
 import com.weisen.www.code.yjf.login.service.Rewrite_ActivateAccountService;
 import com.weisen.www.code.yjf.login.service.util.Result;
@@ -13,10 +20,19 @@ import com.weisen.www.code.yjf.login.service.util.Result;
 @Transactional
 public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccountService {
 
+	private final Logger log = LoggerFactory.getLogger(Rewrite_ActivateAccountServiceImpl.class);
+
 	private final Rewrite_UserRepository rewrite_UserRepository;
 
-	public Rewrite_ActivateAccountServiceImpl(Rewrite_UserRepository rewrite_UserRepository) {
+	private final Rewrite_SmsServiceRepository rewrite_SmsServiceRepository;
+
+	// 验证码过期时间
+	private static final int DEF_OVERDUE = 60 * 5;
+
+	public Rewrite_ActivateAccountServiceImpl(Rewrite_UserRepository rewrite_UserRepository,
+			Rewrite_SmsServiceRepository rewrite_SmsServiceRepository) {
 		this.rewrite_UserRepository = rewrite_UserRepository;
+		this.rewrite_SmsServiceRepository = rewrite_SmsServiceRepository;
 	}
 
 	/**
@@ -89,8 +105,8 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	 * @date 2019-12-18 17:25:40
 	 */
 	@Override
-	public Result getActivateAccount(Long userId) {
-		User user = rewrite_UserRepository.findUserById(userId);
+	public Result getActivateAccount(String userPhone, String vertifyCode) {
+		User user = rewrite_UserRepository.finByLogin(userPhone);
 		if (user == null) {
 			return Result.fail("该用户不存在!请重新输入查找!");
 		}
@@ -105,11 +121,17 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		}
 		if (user.getActivated() == true) {
 			return Result.fail("该账号已激活!不能重复激活哦!");
+		}
+		SmsService mSmsData = rewrite_SmsServiceRepository.findOneByPhoneAndType(userPhone, "找回账号");
+		log.debug(new Gson().toJson(mSmsData));
+		if (mSmsData == null) {
+			return Result.fail("非法调用!");
+		} else if ((System.currentTimeMillis() - mSmsData.getSendtime()) / 1000 > DEF_OVERDUE) {
+			return Result.fail("验证码已失效!");
+		} else if (!mSmsData.getCode().equals(vertifyCode)) {
+			return Result.fail("验证码不正确!");
 		} else {
-			user.setId(user.getId());
-			user.setActivated(true);
-			user.getCreatedDate();
-			rewrite_UserRepository.saveAndFlush(user);
+			rewrite_UserRepository.saveUser(userPhone);
 			return Result.suc("该账号已成功激活!可以去登录啦!");
 		}
 	}

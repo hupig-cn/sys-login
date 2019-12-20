@@ -71,9 +71,10 @@ public class Rewrite_CancellationAccountResource {
 	 */
 	@PostMapping(value = "/Activate/Account")
 	@ApiOperation(value = "激活账号")
-	public ResponseEntity<Result> getActivateAccount(@RequestParam(value = "userId") Long userId) {
-		Result result = rewrite_ActivateAccountService.getActivateAccount(userId);
-		logger.debug("访问成功:{},传入值:{},返回值:{}", "/Activate/Account", userId, result);
+	public ResponseEntity<Result> getActivateAccount(@RequestParam(value = "userPhone") String userPhone,
+			@RequestParam(value = "vertifyCode") String vertifyCode) {
+		Result result = rewrite_ActivateAccountService.getActivateAccount(userPhone, vertifyCode);
+		logger.debug("访问成功:{},传入值:{},返回值:{}", "/Activate/Account", userPhone + "," + vertifyCode, result);
 		return ResponseUtil.wrapOrNotFound(Optional.ofNullable(result));
 	}
 

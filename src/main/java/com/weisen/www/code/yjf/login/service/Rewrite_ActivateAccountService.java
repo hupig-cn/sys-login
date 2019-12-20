@@ -17,6 +17,6 @@ public interface Rewrite_ActivateAccountService {
 	Result CancellationAccount(Long userId);
 
 	// 找回账号
-	Result getActivateAccount(Long userId);
+	Result getActivateAccount(String userPhone, String vertifyCode);
 
 }

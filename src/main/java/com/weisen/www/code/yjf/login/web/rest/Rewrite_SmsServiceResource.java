@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URISyntaxException;
@@ -80,9 +81,9 @@ public class Rewrite_SmsServiceResource {
 
 	@PostMapping("/public/retrieve-Account-Code")
 	@ApiOperation("发送找回账号的短信验证码")
-	public String retrieveAccountCode(@RequestBody SmsServiceDTO smsServiceDTO) {
-		log.debug("REST request to save SmsService : {}", smsServiceDTO);
-		return rewrite_SmsServiceService.retrieveAccountCode(smsServiceDTO.getPhone());
+	public String retrieveAccountCode(@RequestParam(value = "userPhone") String userPhone) {
+		log.debug("REST request to save SmsService : {}", userPhone);
+		return rewrite_SmsServiceService.retrieveAccountCode(userPhone);
 	}
 
 	@ApiOperation("验证支付密码短信验证码")

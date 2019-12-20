@@ -1,6 +1,7 @@
 package com.weisen.www.code.yjf.login.service;
 
 import com.weisen.www.code.yjf.login.service.util.CheckUtils;
+import com.weisen.www.code.yjf.login.service.util.Result;
 
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
@@ -176,21 +177,21 @@ public class Rewrite_SmsServiceService {
 	 * @date 2019-12-20 10:48:19
 	 * @return
 	 */
-	public String retrieveAccountCode(String phone) {
+	public Result retrieveAccountCode(String phone) {
 		log.debug("Request to save SmsService : {}", phone);
 		User user = rewrite_UserRepository.finByLogin(phone);
 		if (user == null) {
-			return "用户不存在，请先注册";
+			return Result.fail("用户不存在，请先注册");
 		}
 		if (user.getActivated() == true) {
-			return "该账号未注销!不能发送验证码!";
+			return Result.fail("该账号未注销!不能发送验证码!");
 		}
 		Instant now = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
 		long nowTime = now.toEpochMilli();
 		// 拿取用户最后修改时间
 		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
 		if ((nowTime - lastModifiedDate) < 604800000L) {
-			return "注销时间没有超过七天!不能发送验证码!";
+			return Result.fail("注销时间没有超过七天!不能发送验证码!");
 		}
 		SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
 		smsServiceDTO.setSendtime(System.currentTimeMillis());
@@ -204,10 +205,10 @@ public class Rewrite_SmsServiceService {
 					smsServiceDTO.setNumber(smsService.getNumber());
 					smsServiceDTO.setId(smsService.getId());
 				} else {
-					return "发送频率过高，请于60s后再尝试发送。";
+					return Result.fail("发送频率过高!请于60秒后再尝试发送!");
 				}
 			} else {
-				return "今日已超过最大发送信息次数。";
+				return Result.fail("今日已超过最大发送信息次数!");
 			}
 		} else {
 			smsServiceDTO.setNumber(0);
@@ -220,9 +221,9 @@ public class Rewrite_SmsServiceService {
 		SmsService smsServices = smsServiceMapper.toEntity(smsServiceDTO);
 		smsServices = rewrite_SmsServiceRepository.save(smsServices);
 		if (!CheckUtils.checkObj(smsServices))
-			return "网络繁忙请稍后重试";
+			return Result.fail("网络繁忙请稍后重试!");
 		String result = SendCode.issue(phone, smsServiceDTO.getType(), smsServiceDTO.getCode());
-		return result;
+		return Result.suc("发送成功!", result);
 	}
 
 	public String validateCode(String login, String vertifyCode, String type) {

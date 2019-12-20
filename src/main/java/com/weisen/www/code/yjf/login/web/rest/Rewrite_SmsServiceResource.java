@@ -3,6 +3,8 @@ package com.weisen.www.code.yjf.login.web.rest;
 import com.weisen.www.code.yjf.login.service.Rewrite_SmsServiceService;
 import com.weisen.www.code.yjf.login.service.dto.Rewrite_200_PayPasswordCodeDTO;
 import com.weisen.www.code.yjf.login.service.dto.SmsServiceDTO;
+import com.weisen.www.code.yjf.login.service.util.Result;
+
 import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -81,7 +83,7 @@ public class Rewrite_SmsServiceResource {
 
 	@PostMapping("/public/retrieve-Account-Code")
 	@ApiOperation("发送找回账号的短信验证码")
-	public String retrieveAccountCode(@RequestParam(value = "userPhone") String userPhone) {
+	public Result retrieveAccountCode(@RequestParam(value = "userPhone") String userPhone) {
 		log.debug("REST request to save SmsService : {}", userPhone);
 		return rewrite_SmsServiceService.retrieveAccountCode(userPhone);
 	}

@@ -87,7 +87,7 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 			return Result.fail("该账号已被注销!不能重复注销哦!");
 		}
 		if ((nowTime - lastModifiedDate) < 2592000000L) {
-			return Result.fail("不能频繁注销哦!");
+			return Result.fail("30天内不能频繁注销哦!");
 		} else {
 			// 修改账号状态
 			user.setActivated(false);

@@ -1,10 +1,12 @@
 package com.weisen.www.code.yjf.login.service.impl;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import com.weisen.www.code.yjf.login.domain.SmsService;
 import com.weisen.www.code.yjf.login.domain.User;
 import com.weisen.www.code.yjf.login.repository.Rewrite_SmsServiceRepository;
 import com.weisen.www.code.yjf.login.repository.Rewrite_UserRepository;
+import com.weisen.www.code.yjf.login.repository.UserRepository;
 import com.weisen.www.code.yjf.login.service.Rewrite_ActivateAccountService;
 import com.weisen.www.code.yjf.login.service.util.Result;
 
@@ -28,6 +31,8 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	private final Rewrite_SmsServiceRepository rewrite_SmsServiceRepository;
 	
 	private final PasswordEncoder passwordEncoder;
+	
+	private final CacheManager cacheManager;
 
 	// 验证码过期时间
 	private static final int DEF_OVERDUE = 60 * 5;
@@ -39,10 +44,12 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 	private static final long DAY_SEVEN_INSTANT = 604800000L;
 
 	public Rewrite_ActivateAccountServiceImpl(Rewrite_UserRepository rewrite_UserRepository,
-			Rewrite_SmsServiceRepository rewrite_SmsServiceRepository,PasswordEncoder passwordEncoder) {
+			Rewrite_SmsServiceRepository rewrite_SmsServiceRepository,PasswordEncoder passwordEncoder,
+			CacheManager cacheManager) {
 		this.rewrite_UserRepository = rewrite_UserRepository;
 		this.rewrite_SmsServiceRepository = rewrite_SmsServiceRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.cacheManager = cacheManager;
 	}
 
 	/**
@@ -145,8 +152,14 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 			user.setPassword(encryptedPassword);
 			user.setActivated(true);
 			rewrite_UserRepository.save(user);
+			this.clearUserCaches(user);
 //			rewrite_UserRepository.saveUser(userPhone);
 			return Result.suc("该账号已成功激活!可以去登录啦!默认密码为123456");
 		}
 	}
+	
+	private void clearUserCaches(User user) {
+        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
+        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+    }
 }

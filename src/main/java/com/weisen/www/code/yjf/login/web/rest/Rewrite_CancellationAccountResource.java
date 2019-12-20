@@ -41,7 +41,7 @@ public class Rewrite_CancellationAccountResource {
 	 * @param userId
 	 * @return
 	 */
-	@PostMapping(value = "/get/Account/Status")
+	@PostMapping(value = "/public/get/Account/Status")
 	@ApiOperation(value = "查询账号状态")
 	public ResponseEntity<Result> getAccountStatus(@RequestParam(value = "userPhone") String userPhone) {
 		Result result = rewrite_ActivateAccountService.getAccountStatus(userPhone);

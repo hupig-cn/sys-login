@@ -83,11 +83,11 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 			rewrite_UserRepository.saveAndFlush(user);
 			return Result.suc("注销成功!七天后才可激活此账号!");
 		}
-		if ((nowTime - lastModifiedDate) < 2592000000L) {
-			return Result.fail("不能频繁注销哦!");
-		}
 		if (user.getActivated() == false) {
 			return Result.fail("该账号已被注销!不能重复注销哦!");
+		}
+		if ((nowTime - lastModifiedDate) < 2592000000L) {
+			return Result.fail("不能频繁注销哦!");
 		} else {
 			// 修改账号状态
 			user.setActivated(false);
@@ -113,7 +113,7 @@ public class Rewrite_ActivateAccountServiceImpl implements Rewrite_ActivateAccou
 		// 获取当前时间日期--nowDate
 		// 拿取用户最后注销时间
 		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
-		Instant now = Instant.now();
+		Instant now = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
 		long nowTime = now.toEpochMilli();
 		// 注销后七天才可激活
 		if ((nowTime - lastModifiedDate) < 604800000L) {

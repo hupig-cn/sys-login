@@ -1,6 +1,10 @@
 package com.weisen.www.code.yjf.login.service;
 
 import com.weisen.www.code.yjf.login.service.util.CheckUtils;
+
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,6 +184,13 @@ public class Rewrite_SmsServiceService {
 		}
 		if (user.getActivated() == true) {
 			return "该账号未注销!不能发送验证码!";
+		}
+		Instant now = Instant.now().plusMillis(TimeUnit.HOURS.toMillis(8));
+		long nowTime = now.toEpochMilli();
+		// 拿取用户最后修改时间
+		long lastModifiedDate = user.getLastModifiedDate().toEpochMilli();
+		if ((nowTime - lastModifiedDate) < 604800000L) {
+			return "注销时间没有超过七天!不能发送验证码!";
 		}
 		SmsServiceDTO smsServiceDTO = new SmsServiceDTO();
 		smsServiceDTO.setSendtime(System.currentTimeMillis());

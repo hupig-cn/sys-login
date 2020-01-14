@@ -198,7 +198,7 @@ public class Rewrite_UserService {
         user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
         user = userRepository.save(user);
         this.clearUserCaches(user);
-        return user.getId() == userDTO.getId() ? Result.suc("修改成功") :  Result.suc("修改失败，请稍后再试");
+        return user.getId() == userDTO.getId() ? Result.suc("修改成功") :  Result.fail("修改失败，请稍后再试");
     }
 
     /**

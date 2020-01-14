@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.weisen.www.code.yjf.login.service.Rewrite_UserService;
 import com.weisen.www.code.yjf.login.service.dto.UserDTO;
+import com.weisen.www.code.yjf.login.service.util.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,5 +45,12 @@ public class Rewrite_UserResource {
     @DeleteMapping("/public/deluser/{userid}")
     public String deleteUser(@PathVariable String userid) {
     	return rewrite_UserService.delUsers(userid);
+    }
+    
+    @PutMapping("/users-ImageOrName1")
+    @ApiOperation("修改用户的头像或昵称")
+    public Result updateUserImageOrName1(@Valid @RequestBody UserDTO userDTO) {
+        log.debug("REST request to update User : {}", userDTO);
+        return rewrite_UserService.updateUser1(userDTO);
     }
 }

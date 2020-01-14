@@ -26,6 +26,7 @@ import com.weisen.www.code.yjf.login.security.SecurityUtils;
 import com.weisen.www.code.yjf.login.service.dto.Rewrite_submitResetPasswrodDTO;
 import com.weisen.www.code.yjf.login.service.dto.UserDTO;
 import com.weisen.www.code.yjf.login.service.util.CheckUtils;
+import com.weisen.www.code.yjf.login.service.util.Result;
 import com.weisen.www.code.yjf.login.web.rest.SensitiveWord;
 import com.weisen.www.code.yjf.login.web.rest.errors.InvalidPasswordException;
 
@@ -182,6 +183,22 @@ public class Rewrite_UserService {
         user = userRepository.save(user);
         this.clearUserCaches(user);
         return user.getId() == userDTO.getId() ? "修改成功" : "修改失败，请稍后再试";
+    }
+    
+    
+    public Result updateUser1(UserDTO userDTO) {
+    	if(null != userDTO.getFirstName()) {
+    		if (!SensitiveWord.check(userDTO.getFirstName())) {
+    			return Result.fail("昵称包含敏感词，请重新修改");
+    		}
+    	}
+        User user = userRepository.findById(userDTO.getId()).get();
+        this.clearUserCaches(user);
+        user.setImageUrl(userDTO.getImageUrl() == null ? user.getImageUrl() : userDTO.getImageUrl());
+        user.setFirstName(userDTO.getFirstName() == null ? user.getFirstName() : userDTO.getFirstName());
+        user = userRepository.save(user);
+        this.clearUserCaches(user);
+        return user.getId() == userDTO.getId() ? Result.fail("修改成功") :  Result.fail("修改失败，请稍后再试");
     }
 
     /**

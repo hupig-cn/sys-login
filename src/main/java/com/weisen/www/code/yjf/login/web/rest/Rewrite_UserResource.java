@@ -48,7 +48,7 @@ public class Rewrite_UserResource {
     }
     
     @PutMapping("/users-ImageOrName1")
-    @ApiOperation("修改用户的头像或昵称")
+    @ApiOperation("修改用户的头像或昵称1")
     public Result updateUserImageOrName1(@Valid @RequestBody UserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         return rewrite_UserService.updateUser1(userDTO);
